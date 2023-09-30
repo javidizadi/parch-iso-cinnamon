@@ -24,9 +24,11 @@ jobs:
         run: |
           reflector -n 3 --protocol https --save /etc/pacman.d/mirrorlist
           pacman -Syy
+          mkdir ./out
+          mount ramfs -t ramfs ./out
+        
       - name: Build image
-        run: mkarchiso -v iso/
-      - run: tree -s -h
+        run: mkarchiso -v -o ./out iso/
       # - name: Upload iso to the release
       #   env:
       #     API_KEY: ${{ secrets.GITHUB_TOKEN }}
