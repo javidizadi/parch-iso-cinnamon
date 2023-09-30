@@ -1,6 +1,7 @@
 # This workflow will build an Arch Linux ISO file when a release is created.
 name: build parchiso per release
 on:
+  workflow_dispatch:
   release:
     types:
       - created
