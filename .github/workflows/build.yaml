@@ -19,7 +19,7 @@ jobs:
       - name: Install Packages via Pacman
         run: |
           pacman -Suy --noconfirm --noprogressbar
-          pacman -Sy --noconfirm --noprogressbar --needed git archiso python python-pygithub reflector tree
+          pacman -Sy --noconfirm --noprogressbar --needed git archiso python python-pygithub reflector tree xz
       - name: Change pacman mirrors
         run: |
           reflector -n 3 --protocol https --save /etc/pacman.d/mirrorlist
@@ -28,8 +28,14 @@ jobs:
       - name: Build image
         run: mkarchiso -v ./iso/
       - run: |
+          cd ./out
+          mkdir ram
+          mount ramfs -t ramfs ./ram
+          time mv ./*.iso ./ram/
+          cd ./ram
+          xz -9e $(ls ./*.iso)
           du -sh .
-          du -sh ./out
+        
       # - name: Upload iso to the release
       #   env:
       #     API_KEY: ${{ secrets.GITHUB_TOKEN }}
