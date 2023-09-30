@@ -30,10 +30,10 @@ jobs:
       - run: |
           cd ./out
           mkdir ram
-          mount ramfs -t ramfs ./ram
-          time mv ./*.iso ./ram/
-          cd ./ram
-          xz -9e $(ls ./*.iso)
+          mount ramfs -t ramfs /mnt
+          time mv ./*.iso /mnt
+          cd /mnt
+          xz -9e ./"$(ls ./*.iso)"
           du -sh .
         
       # - name: Upload iso to the release
