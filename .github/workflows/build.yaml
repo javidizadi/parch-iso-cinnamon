@@ -18,16 +18,17 @@ jobs:
       - name: Install Packages via Pacman
         run: |
           pacman -Suy --noconfirm --noprogressbar
-          pacman -Sy --noconfirm --noprogressbar --needed git archiso python python-pygithub reflector
+          pacman -Sy --noconfirm --noprogressbar --needed git archiso python python-pygithub reflector tree
       - name: Change pacman mirrors
         run: |
           reflector -n 3 --protocol https --save /etc/pacman.d/mirrorlist
           pacman -Syy
       - name: Build image
         run: mkarchiso -v iso/
-      - name: Upload iso to the release
-        env:
-          API_KEY: ${{ secrets.GITHUB_TOKEN }}
-          REPO_NAME: ${{ github.repository }}
-          RELEASE_NAME: ${{ github.ref_name }}
-        run: python tools/upload_asset.py
+      - run: tree -s -h
+      # - name: Upload iso to the release
+      #   env:
+      #     API_KEY: ${{ secrets.GITHUB_TOKEN }}
+      #     REPO_NAME: ${{ github.repository }}
+      #     RELEASE_NAME: ${{ github.ref_name }}
+        # run: python tools/upload_asset.py
