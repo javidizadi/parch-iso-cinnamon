@@ -24,13 +24,10 @@ jobs:
         run: |
           reflector -n 3 --protocol https --save /etc/pacman.d/mirrorlist
           pacman -Syy
-          
-      - run: swapoff -a
-        continue-on-error: True
-
+      
       - run: | 
           mkdir tmp
-          mount -t tmpfs -o size=5G tmpfs ./tmp
+          mount -t ramfs ramfs  ./tmp
           
       - run: free -h  
         
