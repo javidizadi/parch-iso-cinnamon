@@ -30,10 +30,14 @@ jobs:
       - run: |
           cd ./out
           mkdir ram
-          mount ramfs -t ramfs /mnt
+          swapoff -a
+          mount -t tmpfs -o size=5G tmpfs /mnt
+          free -h
           time mv ./*.iso /mnt
+          free -h
           cd /mnt
           xz -9e ./"$(ls ./*.iso)"
+          ls -ltrh
           du -sh .
         
       # - name: Upload iso to the release
