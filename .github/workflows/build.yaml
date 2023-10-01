@@ -27,11 +27,13 @@ jobs:
         
       - name: Build image
         run: mkarchiso -v ./iso/
+        
+      - run: sudo swapoff -a
+        continue-on-error: True
+        
       - run: |
-          cd ./out
           mkdir ram
-          swapoff -a
-          mount -t tmpfs -o size=5G tmpfs /mnt
+          mount -t tmpfs -o size=4G tmpfs /mnt
           free -h
           time mv ./*.iso /mnt
           free -h
@@ -39,7 +41,7 @@ jobs:
           xz -9e ./"$(ls ./*.iso)"
           ls -ltrh
           du -sh .
-        
+        working-directory: ./out
       # - name: Upload iso to the release
       #   env:
       #     API_KEY: ${{ secrets.GITHUB_TOKEN }}
