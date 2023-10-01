@@ -27,7 +27,7 @@ jobs:
       
       - run: | 
           mkdir tmp
-          mount -t ramfs ramfs  ./tmp
+          mount -t tmpfs -o size=10G tmpfs  ./tmp
           
       - run: free -h  
         
