@@ -19,29 +19,27 @@ jobs:
       - name: Install Packages via Pacman
         run: |
           pacman -Suy --noconfirm --noprogressbar
-          pacman -Sy --noconfirm --noprogressbar --needed git archiso python python-pygithub reflector tree xz
+          pacman -Sy --noconfirm --noprogressbar --needed git archiso python python-pygithub reflector
       - name: Change pacman mirrors
         run: |
           reflector -n 3 --protocol https --save /etc/pacman.d/mirrorlist
           pacman -Syy
+          
+      - run: swapoff -a
+        continue-on-error: True
+
+      - run: | 
+          mkdir tmp
+          mount -t tmpfs -o size=5G tmpfs ./tmp
+          
+      - run: free -h  
         
       - name: Build image
-        run: mkarchiso -v ./iso/
+        run: mkarchiso -v -w ./tmp ./iso
         
-      - run: sudo swapoff -a
-        continue-on-error: True
+      - run: free -h
         
-      - run: |
-          mkdir ram
-          mount -t tmpfs -o size=4G tmpfs /mnt
-          free -h
-          time mv ./*.iso /mnt
-          free -h
-          cd /mnt
-          xz -9e ./"$(ls ./*.iso)"
-          ls -ltrh
-          du -sh .
-        working-directory: ./out
+        
       # - name: Upload iso to the release
       #   env:
       #     API_KEY: ${{ secrets.GITHUB_TOKEN }}
